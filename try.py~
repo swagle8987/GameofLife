@@ -9,9 +9,8 @@ DispW = 1280
 fps = 30
 setDisplay = pygame.display.set_mode((DispW, DispH))
 
+
 class Block:
-    """A class to represent each block on the grid"""
-    
     def __init__(self, x, y, isAlive):
         self.box = pygame.Rect(x, y, 10, 10)
         self.alive = isAlive
@@ -24,19 +23,18 @@ class Block:
         else:
             pygame.draw.rect(setDisplay, BLACK, self.box)
 
-    ##implementing the rules 
     def check(self, count):
-        if count > 3 and self.alive: ## if more than three alive 
-            self.alive = False       ## neighbours die due to overpopulation
+        if count > 3 and self.alive:
+            self.alive = False
             self.printblock()
-        elif count == 3 and not self.alive: ## if exactly three alive neighbours
-            self.alive = True               ## come to life
+        elif count == 3 and not self.alive:
+            self.alive = True
             self.printblock()
-        elif 1 < count < 4 and self.alive: ## if three or two alive neighbours
-            self.alive = True              ## stay alive
-            self.printblock() 
-        elif count < 2 and self.alive:  ## if less than two alive neighbours
-            self.alive = False          ## die due to underpopulation
+        elif 1 < count < 4 and self.alive:
+            self.alive = True
+            self.printblock()
+        elif count < 2 and self.alive:
+            self.alive = False
             self.printblock()
 
 
@@ -45,7 +43,6 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 if __name__ == "__main__":
-    ## initialize the display
     setDisplay.fill(BLACK)
     fpsTime = pygame.time.Clock()
     pygame.display.set_caption("Game of Life")
@@ -54,12 +51,11 @@ if __name__ == "__main__":
     maxx = int((DispW - 20) / 10)
     maxy = int((DispH - 20) / 10)
     boxesnp = np.empty([maxx, maxy], dtype=Block)
-    ## fill the boxes
     for i in range(maxx):
         for j in range(maxy):
             boxesnp[i, j] = Block(i*10, j*10, False)
-            
-    ## fill in the configuration 
+    pygame.display.update()
+    fpsTime.tick(fps)
     n = int(input("enter the number of active boxes"))
     ch = int(input("do you wish to randomize? "))
     for i in range(n):
@@ -76,8 +72,6 @@ if __name__ == "__main__":
     gencount = 0
     start = input("Start in 3 seconds? :")
     time.sleep(3)
-    
-    ## Start the game
     while True:
         print("Generation: "+str(gencount))
         gencount += 1
@@ -87,7 +81,7 @@ if __name__ == "__main__":
                 i = x*10
                 j = y*10
                 try:
-                    boxesnp[x, y].check(sum([surfacearray[i-5, j-5],   ##if a normal box
+                    boxesnp[x, y].check(sum([surfacearray[i-5, j-5],
                                              surfacearray[i-5, j+5],
                                              surfacearray[i-5, j+15],
                                              surfacearray[i+5, j-5],
@@ -98,47 +92,47 @@ if __name__ == "__main__":
                 except IndexError:
                     if i == 0:
                         if j == 0:
-                            boxesnp[i, j].check(sum([surfacearray[i+15, j+5], ## if top left corner
+                            boxesnp[i, j].check(sum([surfacearray[i+15, j+5],
                                                     surfacearray[i+5, j+15],
                                                     surfacearray[i+15, j+15]]))
                         elif 0 < j < maxy-1:
-                            boxesnp[i, j].check(sum([surfacearray[i+5, j-5],  ## if extreme left column
+                            boxesnp[i, j].check(sum([surfacearray[i+5, j-5],
                                                     surfacearray[i+15, j-5],
                                                     surfacearray[i+15, j+5],
                                                     surfacearray[i+5, j+15],
                                                     surfacearray[i+15, j+15]]))
                         elif j == maxy-1:
-                            boxesnp[i, j].check(sum([surfacearray[i+5, j-5], ## if bottom left corner
+                            boxesnp[i, j].check(sum([surfacearray[i+5, j-5],
                                                     surfacearray[i+15, j-5],
                                                     surfacearray[i+15, j+5]]))
                     elif 0 < i < maxx-1:
                         if j == 0:
-                            boxesnp[i, j].check(sum([surfacearray[i-5, j+5], ## if extreme top row
+                            boxesnp[i, j].check(sum([surfacearray[i-5, j+5],
                                                     surfacearray[i+15, j+5],
                                                     surfacearray[i-5, j+15],
                                                     surfacearray[i+5, j+15],
                                                     surfacearray[i+15, j+15]]))
 
                         elif j == maxy-1:
-                            boxesnp[i, j].check(sum([surfacearray[i-5, j-5], ## if extreme bottom row
+                            boxesnp[i, j].check(sum([surfacearray[i-5, j-5],
                                                     surfacearray[i+5, j-5],
                                                     surfacearray[i+15, j-5],
                                                     surfacearray[i-5, j+5],
                                                     surfacearray[i+15, j+5]]))
                     elif i == maxx-1:
                         if j == 0:
-                            boxesnp[i, j].check(sum([surfacearray[i-5, j+5], ## if top right corner
+                            boxesnp[i, j].check(sum([surfacearray[i-5, j+5],
                                                     surfacearray[i-5, j+15],
                                                     surfacearray[i+5, j+15]]))
 
                         elif 0 < j < maxy-1:
-                            boxesnp[i, j].check(sum([surfacearray[i-5, j-5], ## if extreme right column
+                            boxesnp[i, j].check(sum([surfacearray[i-5, j-5],
                                                     surfacearray[i+5, j-5],
                                                     surfacearray[i-5, j+5],
                                                     surfacearray[i-5, j+15],
                                                     surfacearray[i+5, j+15]]))
                         elif j == maxy-1:
-                            boxesnp[i, j].check(sum([surfacearray[i-5, j-5], ## if bottom right corner
+                            boxesnp[i, j].check(sum([surfacearray[i-5, j-5],
                                                     surfacearray[i+5, j-5],
                                                     surfacearray[i-5, j+5]]))
         pygame.display.update()
